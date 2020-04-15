@@ -1,0 +1,12 @@
+Local.sc
+build
+.sconf_temp
+.sconsign.dblite
+*.csv
+*.pyc
+*.log
+compile_commands.json
+tags
+*.swp
+*.img
+*.core

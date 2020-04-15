@@ -1,0 +1,11 @@
+
+import os
+
+Import('env')
+
+src = [
+    "corelog.c",
+]
+
+env.StaticLibrary("corelog", src)
+

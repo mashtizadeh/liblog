@@ -1,0 +1,11 @@
+
+import os
+
+Import('env')
+
+src = [
+    "debug.cc",
+]
+
+env.StaticLibrary("log", src)
+
