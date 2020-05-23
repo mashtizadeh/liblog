@@ -74,9 +74,12 @@ typedef struct CoreLog_Entry
 
 int CoreLog_Init(void *buf, uint32_t bytes, const char *name);
 void CoreLog_Destroy(void);
-void CoreLog_Log(int logLevel, const char *fmtstr, ...);
-void CoreLog_Warning(const char *fmtstr, ...);
-void CoreLog_Alert(const char *fmtstr, ...);
+void CoreLog_Log(int logLevel, const char *fmtstr, ...)
+    __attribute__((format(printf, 2, 3)));
+void CoreLog_Warning(const char *fmtstr, ...)
+    __attribute__((format(printf, 1, 2)));
+void CoreLog_Alert(const char *fmtstr, ...)
+    __attribute__((format(printf, 1, 2)));
 void CoreLog_BinaryDump(int logLevel, const void *buf, int len);
 void CoreLog_Backtrace(int depth);
 void CoreLog_Stackdump(int depth);

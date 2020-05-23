@@ -14,7 +14,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifdef __linux__
+#undef _GNU_SOURCE
+#include <features.h>
+#endif
+
+#ifdef __USE_GNU
+#error
+#endif
+
 #include <assert.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <cinttypes>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -22,7 +34,9 @@
 #include <time.h>
 
 #include <signal.h>
+#if defined(__FreeBSD__)
 #include <pthread_np.h>
+#endif
 
 #ifdef __MACH__
 #include <mach/mach.h>
@@ -75,6 +89,19 @@ get_timespec(struct timespec *ts)
 #endif
 }
 
+static uint64_t
+getthreadid()
+{
+#if defined(__FreeBSD__)
+    return (uint64_t)pthread_getthreadid_np();
+#elif defined(__linux__)
+    /* Should use gettid() but WSL doens't have it */
+    return (uint64_t)pthread_self();
+#else
+#error "Unsupported platform"
+#endif
+}
+
 #define MAX_LOG         (1000)
 
 /*
@@ -98,7 +125,7 @@ Debug_Log(int level, const char *fmt, ...)
     time(&curTime);
     off = strftime(buf, 32, "%Y-%m-%d %H:%M:%S ", localtime(&curTime));
 
-    snprintf(buf + off, MAX_LOG - off, "%d ", pthread_getthreadid_np());
+    snprintf(buf + off, MAX_LOG - off, "%" PRIu64 " ", getthreadid());
     off = strlen(buf);
 
     switch (level) {
@@ -163,7 +190,7 @@ Debug_Perror(const char *str, int err)
 {
     char buf[64];
 
-    strerror_r(err, buf, sizeof(buf));
+    (void)strerror_r(err, buf, sizeof(buf));
 
     Debug_Log(LEVEL_ERR, "%s: %s\n", str, buf);
 }

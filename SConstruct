@@ -145,6 +145,7 @@ if sys.platform.startswith("freebsd"):
     env.Append(CPPFLAGS = "-DHAVE_EXECINFO")
 elif sys.platform == "linux2" or sys.platform == "darwin":
     env.Append(CPPFLAGS = "-DHAVE_EXECINFO")
+    env.Append(CPPFLAGS = "-D_XOPEN_SOURCE=700L")
 
 # XXX: Hack to support clang static analyzer
 def CheckFailed():

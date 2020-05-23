@@ -12,7 +12,10 @@ libs = [
 ]
 
 if sys.platform != "darwin":
-    libs += ['rt', 'pthread', 'execinfo']
+    libs += ['rt', 'pthread']
+
+if sys.platform == "freebsd":
+    libs += ['execinfo']
 
 if sys.platform == "linux2":
     libs += ['uuid', 'resolv']
